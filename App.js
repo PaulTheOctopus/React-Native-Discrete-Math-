@@ -154,6 +154,13 @@ class EnumCombiScreen extends React.Component {
                             color="#99ccff"
                             //accessibilityLabel="smth"
                         /></View>
+                    <View style={styles.innerConteiner}>
+                        <Button
+                            onPress={() => navigate('Placements')}
+                            title="Розміщення"
+                            color="#99ccff"
+                            //accessibilityLabel="smth"
+                        /></View>
                     
                     
                 </ScrollView>
@@ -208,13 +215,13 @@ class PermutScreen extends React.Component {
 			<View style={styles.container}>
 			<ScrollView style={{backgroundColor: '#c2d3ef', flex: 1}}>
 				<BigText style={{width: 0, flexGrow: 1, flex: 1}}><BoldText> Визначення. </BoldText> Перестановкою множини з n елементів називається розташування елементів в певному порядку.
-Так, всі різні перестановки множини з трьох елементів {'{'} a, b, c \ {'}'} - це abc, acb, bac, bca, cab, cba.
-Очевидно, перестановки можна вважати окремим випадком розміщень при m = n>.
-Число всіх перестановок з елементів позначається </BigText>
+					Так, всі різні перестановки множини з трьох елементів {'{'} a, b, c \ {'}'} - це abc, acb, bac, bca, cab, cba.
+					Очевидно, перестановки можна вважати окремим випадком розміщень при m = n>.
+					Число всіх перестановок з елементів позначається </BigText>
 				<Image source={require('./img/Pn.png')} />
 				<BigText style={{width: 0, flexGrow: 1, flex: 1}}>
 				  (Від початкової букви французького слова "permutation", що означає "перестановка", "переміщення").
-Отже, число всіх різних перестановок обчислюється за формулою
+					Отже, число всіх різних перестановок обчислюється за формулою
 			</BigText>
 			<Image style={{left: 0, right:0}} source={require('./img/Pn_formula.png')} />
 			</ScrollView>
@@ -333,13 +340,17 @@ class PermCalcScreen extends React.Component {
     super(props);
     this.state = {text: '',
   								hasFocus: false,
-  								placeholderText: ''};
+  								placeholderText: '',
+  								};
   }
   	updatePlaceholderText= () => {
   		this.setState({placeholderText: 'Введіть n'})
   	}
 
 	render () {
+		function factorial(n) {
+  		return n ? n * factorial(n - 1) : 1;
+		}
 		return (
 			<ScrollView style={{margin: 10, flex: 1}}>
 				<Madoka
@@ -349,7 +360,116 @@ class PermCalcScreen extends React.Component {
 	    	inputStyle={{ color: '#040d2d', fontWeight: 'bold' }}
 	    	onFocus = { this.updatePlaceholderText}
 	    	placeholder={this.state.placeholderText}
+	    	keyboardType={'numeric'}
+	    	onChangeText={(text) => this.setState({text})}
+	    	onSubmitEditing={() => {
+	    		var result, n = this.state.text;
+	    		result = "" + (n ? n * factorial(n - 1) : 1);
+	    		Alert.alert(result);
+	    	}}
 				/>
+			</ScrollView>
+			)
+	}
+}
+
+class PlacementsScreen extends React.Component {
+	static navigationOptions = {
+        title: 'Розміщення',
+    };
+	render() {
+		const {navigate} = this.props.navigation;
+		return (
+			//<View>
+				//тут обратить внимание на костыль с фигурными скобками(пока только такое решение)
+			<View style={styles.container}>
+			<ScrollView style={{ flex: 1}}>
+				<BigText style={{width: 0, flexGrow: 1, flex: 1}}><BoldText> Визначення. </BoldText> 
+					Розміщеннями безлічі з n різних елементів по m елементів (m {'<'}= n) 
+					називаються комбінації, які складені з даних n елементів по m
+					елементів і відрізняються або самими елементами, або порядком елементів.
+					Число всех размещений множества из n элементов по m элементов 
+					обозначается через</BigText>
+				<Image source={require('./img/Anm.png')} />
+			<Image style={{left: 0, right:0}} source={require('./img/n12.png')} />
+			<BigText> и </BigText>
+			<Image source={require('./img/m1n.png')}/>
+			</ScrollView>
+				<View style={styles.buttonContainer}>
+					<TouchableOpacity style={styles.button}
+					onPress={() => navigate('PlacementsCalc')}
+					>
+		    	<BigText>Калькулятор</BigText>
+					</TouchableOpacity>
+
+					<TouchableOpacity style={styles.button}
+					onPress={() => navigate('PlacementsCalc')}
+					>
+		    	<BigText>Задачі</BigText>
+					</TouchableOpacity>
+				</View>
+			</View>
+			)
+	}
+}
+
+class PlacementsCalcScreen extends React.Component {
+	static navigationOptions = {
+		title: 'Калькулятор розміщення'
+	}
+
+	constructor(props) {
+    super(props);
+    this.state = {m: '',
+    							n: '',
+  								hasFocus: false,
+  								placeholderText: '',
+  								};
+  }
+  updatePlaceholderText= () => {
+  	this.setState({placeholderText: 'Введіть n'})
+  }
+
+  render () {
+		function factorial(n) {
+  		return n ? n * factorial(n - 1) : 1;
+		}
+		return (
+			<ScrollView style={{margin: 10, flex: 1}}>
+				<Madoka
+				label={'Введіть m'}
+				borderColor={'#4286f4'}
+				labelStyle={{ color: '#008445' }}
+	    	inputStyle={{ color: '#040d2d', fontWeight: 'bold' }}
+	    	onFocus = { this.updatePlaceholderText}
+	    	placeholder={this.state.placeholderText}
+	    	keyboardType={'numeric'}
+	    	onChangeText={(m) => this.setState({m})}
+				/>
+
+				<Madoka
+				label={'Введіть n'}
+				borderColor={'#4286f4'}
+				labelStyle={{ color: '#008445' }}
+	    	inputStyle={{ color: '#040d2d', fontWeight: 'bold' }}
+	    	onFocus = { this.updatePlaceholderText}
+	    	placeholder={this.state.placeholderText}
+	    	keyboardType={'numeric'}
+	    	onChangeText={(n) => this.setState({n})}
+				/>
+				<TouchableOpacity style={styles.button}
+				onPress={() => {
+	    		var result, n, m;
+	    		n = this.state.n;
+	    		result = n;
+	    		m = this.state.m;
+	    		for (; n > m; n-- ) {
+	    			result = result * (n - 1);
+	    		}
+	    		Alert.alert("" +result);
+	    	}}>
+				<Image style={{margin: 3}} source={require('./img/Anm.png')}/>
+	    	</TouchableOpacity>
 			</ScrollView>
 			)
 	}
@@ -378,6 +498,8 @@ const AppNavigation = StackNavigator({
     InfCombi: {screen: InfCombiScreen},
     StructCombi: {screen: StructCombiScreen},
     PermCalc: {screen: PermCalcScreen},
+    Placements: {screen: PlacementsScreen},
+    PlacementsCalc: {screen: PlacementsCalcScreen},
 });
 
 const styles = StyleSheet.create({
@@ -422,7 +544,7 @@ const styles = StyleSheet.create({
     flex: 0.1,
     flexDirection: 'row',
     marginBottom: 0,
-    backgroundColor: 'grey',
+    //backgroundColor: 'grey',
     padding: 0,
     margin: 0,
     marginBottom: 0,
@@ -437,6 +559,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 40,
     marginBottom: 0,
+    padding: 3,
   }
 });
 
